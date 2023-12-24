@@ -1,46 +1,58 @@
 #!/usr/bin/env python3
+from operator import ne
 import os
-from random import randbytes
+import numpy as np
 import zipfile as zf
 import io
 
-def read_params():
+""" def read_params():
 
     file = open('jump_lengths.txt','r')
-    jump_lengths = file.read().split(',')
+    jump_lengths = map(int,file.read().split(','))
     file.close()
+    
 
     file = open('sequence_lengths.txt','r')
-    sequence_lengths = file.read().split(',')
+    sequence_lengths = map(int,file.read().split(','))
     file.close()
 
-    return jump_lengths,sequence_lengths
+    return jump_lengths,sequence_lengths """
+
 
 def main():
 
-    """dataset_folder = './dataset_prova'
-    file_list = os.listdir(dataset_folder)
-    for file in file_list:
-        file_path = dataset_folder + '/' + file
-        path_to_save = './dataset_low_entropy/'
-        jump_length = int(input('Insert jump length: '))"""
-    jump_lengths,sequence_lengths = read_params()
-
-    print(jump_lengths,sequence_lengths)
+    jump_lengths = [12,32,44]
+    sequence_lengths = [10,20]
     
-    """with zf.ZipFile('NapierOne-tiny.zip', mode='a') as dataset:
-        for archive_name in dataset.namelist():
+    with zf.ZipFile('NapierOne-tiny.zip', mode='a') as dataset:
+        archive_list = dataset.namelist()
+        for archive_name in archive_list:
             if ('RANSOMWARE' in archive_name):
                 with dataset.open(archive_name) as archive:
                     archive_filedata = io.BytesIO(archive.read())
-                    with zf.ZipFile(archive_filedata) as nested_zip:
-                        for file_name in nested_zip.namelist():
-                            with nested_zip.open(file_name) as file:
-                                filedata = file.read()
-                                print(filedata)
+                    with zf.ZipFile(archive_filedata, mode='a') as nested_zip:
+                        for jump_length in jump_lengths:
+                            for sequence_length in sequence_lengths:
+                                random_values = io.BytesIO(np.random.bytes(sequence_length))
+                                new_zip_file_name = archive_name.replace('.zip', '-JL' + str(jump_length) + '-SL' + str(sequence_length) + '.zip')
+                                print('Writing ' + new_zip_file_name + ' ... ')
+                                with zf.ZipFile(new_zip_file_name, mode='a') as low_entropy_archive:
+                                    for file_name in nested_zip.namelist():
+                                        new_file_name = file_name.replace(file_name[-4:], '-JL' + str(jump_length) + '-SL' + str(sequence_length) + file_name[-4:])
+                                        with nested_zip.open(file_name) as file:
+                                            file_data = file.read()
+                                            modified_file = []
+                                            for i in range(0,len(file_data),jump_length):
+                                                modified_file += file_data[i:i+jump_length] + random_values.getbuffer()
+                                            low_entropy_archive.writestr(new_file_name, bytes(modified_file))
+                                    low_entropy_archive.close()
+                                dataset.write(new_zip_file_name)
+                                print('Wrote: '+ new_zip_file_name)
+                                os.remove(new_zip_file_name)                                     
                         nested_zip.close()
                     archive.close()
-        dataset.close() """
+        dataset.close()
+    print('Finished')
 
     return
 
