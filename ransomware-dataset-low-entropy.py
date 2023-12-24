@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from operator import ne
 import os
 import numpy as np
 import zipfile as zf
