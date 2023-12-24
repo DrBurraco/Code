@@ -1,23 +1,10 @@
 #!/usr/bin/env python3
+
 from operator import ne
 import os
 import numpy as np
 import zipfile as zf
 import io
-
-""" def read_params():
-
-    file = open('jump_lengths.txt','r')
-    jump_lengths = map(int,file.read().split(','))
-    file.close()
-    
-
-    file = open('sequence_lengths.txt','r')
-    sequence_lengths = map(int,file.read().split(','))
-    file.close()
-
-    return jump_lengths,sequence_lengths """
-
 
 def main():
 
