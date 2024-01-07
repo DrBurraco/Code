@@ -3,3 +3,4 @@ cudnn-*
 cuda-*
 test.py
 docker.txt
+.vscode
