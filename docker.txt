@@ -1,0 +1,22 @@
+commands:
+
+#create container ad execute bash
+docker run -it --rm -v ${PWD}:/tmp -w /tmp tensorflow/tensorflow bash 
+
+#execute the script
+python3 test.py 
+<--- END --->
+
+
+#Start a Jupyter Notebook server on hostPort(8888):containerPort(8888) using 
+TensorFlow's latest build
+docker run -it -p 8888:8888 tensorflow/tensorflow:latest-jupyter
+
+<--- NOT WORKING --->
+docker run -it --rm -p 8888:8888 -v ${PWD}:/tmp -w /tmp tensorflow/tensorflow:latest-jupyter
+docker run -it --rm -p 8888:8888 -v ${PWD}:/tmp -w /tmp tensorflow/tensorflow:latest-jupyter
+docker run -it --rm -p 8888:8888 -v ${PWD}/tensorflow:/notebooks tensorflow/tensorflow:latest-jupyter
+
+docker run -it --rm -p 8888:8888 -v ${PWD} tensorflow/tensorflow:latest-jupyter
+
+docker run -it --rm -p 8888:8888 -v ${PWD}/tensorflow:/home/jovyan/workspace tensorflow/tensorflow:latest-jupyter
